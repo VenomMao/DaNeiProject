@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!--namespace是哪个接口的全名（包名+类名） -->
+<mapper namespace="cn.tedu.store.mapper.UserMapper">
+	<!--通过子节点配置与抽象方法的映射关系 id是接口方法中的名称 由于对应的方法是有参数的，则配置parameterType(参数类型)，写User完整包名+类名 
+		***如果参数类型是八种基本类型或者String类型的，则不需要配置parameterType INSERT INTO t_user(id,username,password,phone,email)属性是数据库里的字段 
+		VALUES里面是User类里面对应的实体类 如果想要获取新记录的id，则需要配置useGeneratedKeys="true" keyProperty="id"两个属性 
+		只针对主键 -->
+ 	
+ 	<!-- 增加是不需要写id的 -->
+	<insert id="insert" parameterType="cn.tedu.store.bean.User"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+		t_user
+		(username,password,phone,email,gender,create_user,create_time,modified_user,modified_time)
+		VALUES
+		(#{username},#{password},#{phone},#{email},#{gender},#{createUser},#{createTime},#{modifiedUser},#{modifiedTime});
+	</insert>
+	
+	<!-- 修改用户数据，可以修改个人资料以及密码等 -->
+	<update id = "update" parameterType="cn.tedu.store.bean.User">
+		update 
+			t_user 
+			set 
+			<if test="password!=null">
+				password=#{password},
+			</if>
+			
+			<if test="username!=null">
+				username=#{username},
+			</if>
+			
+			<if test="phone!=null">
+				phone=#{phone},
+			</if>
+			
+			<if test="email!=null">
+				email=#{email},
+			</if>
+			
+			<if test="gender!=null">
+				gender=#{gender},
+			</if>
+			modified_user=#{modifiedUser}, 
+			modified_time=#{modifiedTime}
+			where 
+				id = #{id}
+	</update>
+  
+	<!--resultType属性指定返回值的数据类型 -->
+	<select id="findUserByUsername" resultType="cn.tedu.store.bean.User">
+		SELECT
+		id,username,password,phone,email,gender,
+		create_user as createUser,
+		create_time as createTime,
+		modified_user modifiedUser,
+		modified_time modifiedTime
+		FROM
+		t_user
+		where
+		username =#{username}
+	</select>
+	
+	<!--resultType属性指定返回值的数据类型 -->
+	<select id="findUserById" resultType="cn.tedu.store.bean.User">
+		SELECT
+		id,username,password,phone,email,gender,
+		create_user as createUser,
+		create_time as createTime,
+		modified_user modifiedUser,
+		modified_time modifiedTime
+		FROM
+		t_user
+		where
+		id =#{id}
+	</select>
+	
+	<!-- 可以使用一般的select去查询，去查数据库所有字段，去找email 不过很麻烦。
+		使用下面方法，直接去判断emial的个数，使用聚合函数即可 -->
+	<select id="getRecordCountByEmail" resultType="java.lang.Integer">
+		SELECT
+		count(id)
+		FROM
+		t_user
+		where
+		email =#{email}
+	</select>
+	
+	<!-- 可以使用一般的select去查询，去查数据库所有字段，去找email 不过很麻烦。
+		使用下面方法，直接去判断phone的个数，使用聚合函数即可 -->
+	<select id="getRecordCountByPhone" resultType="java.lang.Integer">
+		SELECT
+		count(id)
+		FROM
+		t_user
+		where
+		phone =#{phone}
+	</select>
+</mapper> 
+
+
+
+
+
+
+

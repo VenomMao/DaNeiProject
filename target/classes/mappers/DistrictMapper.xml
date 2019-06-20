@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!--namespace是哪个接口的全名（包名+类名） -->
+<mapper namespace="cn.tedu.store.mapper.DistrictMapper">
+	<!--通过子节点配置与抽象方法的映射关系 id是接口方法中的名称 由于对应的方法是有参数的，则配置parameterType(参数类型)，写User完整包名+类名 
+		***如果参数类型是八种基本类型或者String类型的，则不需要配置parameterType INSERT INTO t_user(id,username,password,phone,email)属性是数据库里的字段 
+		VALUES里面是User类里面对应的实体类 如果想要获取新记录的id，则需要配置useGeneratedKeys="true" keyProperty="id"两个属性 
+		只针对主键 -->
+ 	
+ 	<!-- 增加是不需要写id的 字段名主键keyProperty叫id -->
+	<!-- 获取所有省的列表 List<Province> getProvinces(); -->
+	
+	<!--????? 为啥大写的As就可以读到数据，小写的读数据就是undifineds -->
+	<select id="getProvinces" resultType="cn.tedu.store.bean.Province">
+		select 
+			id,province_code AS provinceCode ,province_name AS provinceName 
+		from 
+			t_dict_provinces
+		  
+	</select>
+	
+	<!-- 获取所有市的列表 List<City> getCities(String provinceCode) -->
+	<select id="getCities"
+		resultType="cn.tedu.store.bean.City">
+		SELECT 
+			id,
+			province_code	AS provinceCode,
+			city_code		AS cityCode,
+			city_name		AS cityName  
+		FROM 
+			t_dict_cities
+		WHERE 
+			province_code=#{provinceCode}
+	</select>
+	
+	<!-- 获取所有区的列表 List<Area> getAreaes(String procityCode) -->
+	<select id="getAreas"
+		resultType="cn.tedu.store.bean.Area">
+		SELECT 
+			id,
+			city_code AS cityCode,
+			area_code AS areaCode,
+			area_name AS areaName   
+		FROM 
+			t_dict_areas
+		WHERE 
+			city_code=#{cityeCode}	
+	</select>
+	
+	<!-- 根据省的代号去查省的中文名称 -->
+	<!-- as 封装到对象中去 -->
+	<select id="getProvinceNameByCode" resultType="java.lang.String">
+		select 
+			province_name 
+		from 
+			t_dict_provinces
+		  where 
+		  	province_code = #{provinceCode};
+	</select>
+	
+	<!-- 根据市的代号去查市的中文名称 -->
+	<!-- as 封装到对象中去 -->
+	<select id="getCityNameByCode" resultType="java.lang.String">
+		select 
+			city_name 
+		from 
+			t_dict_cities
+		  where 
+		  	city_code = #{cityCode};
+	</select>
+	
+	<!-- 根据区的代号去查区的中文名称 -->
+	<!-- as 封装到对象中去 -->
+	<select id="getAreaNameByCode" resultType="java.lang.String">
+		select 
+			area_name 
+		from 
+			t_dict_areas
+		  where 
+		  	area_code = #{areaCode};
+	</select>
+	
+	
+</mapper> 
+
+
+
+
+
+
+

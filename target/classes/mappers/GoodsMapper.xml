@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!--namespace是哪个接口的全名（包名+类名） -->
+<mapper namespace="cn.tedu.store.mapper.GoodsMapper">
+	
+ 		<select id="getGoodsListByCategoryId" resultType="cn.tedu.store.bean.Goods">
+ 			select 
+ 				id,
+ 				category_id AS categoryId,
+ 				item_type AS itemType,
+ 				title,
+ 				sell_point AS sellPoint,
+ 				price,
+ 				num,
+ 				barcode AS barCode,
+ 				image,
+ 				status,
+ 				priority,
+ 				created_time AS createdTime,
+ 				modified_time AS modifiedTime,
+ 				created_user AS createdUser,
+ 				modified_user AS modifiedUser
+ 			from 
+ 				t_goods
+ 			where 
+ 				category_id = #{categoryId}
+ 				AND status=1 AND num>0
+ 			order by 
+ 				${orderBy}
+			LIMIT 
+				#{offset},#{count}
+ 		</select>
+ 		
+ 		<!-- 增删改默认是可以不需要写resultType，返回的是受影响的行数 -->
+ 		<select id="getGoodsById" resultType="cn.tedu.store.bean.Goods">
+ 			SELECT
+ 				id,
+ 				category_id AS categoryId,
+ 				item_type AS itemType,
+ 				title,
+ 				sell_point AS sellPoint,
+ 				price,
+ 				num,
+ 				barcode AS barCode,
+ 				image,
+ 				status,
+ 				priority,
+ 				created_time AS createdTime,
+ 				modified_time AS modifiedTime,
+ 				created_user AS createdUser,
+ 				modified_user AS modifiedUser
+ 			FROM
+ 				t_goods
+ 			WHERE
+ 				id=#{id}
+ 				AND status=1 AND num>0
+ 		</select>
+ 		
+ 		
+ 		<select id = "getGoodsCountByCategoryId" resultType="java.lang.Integer">
+ 			SELECT
+ 				COUNT(id)
+ 			FROM 
+ 				t_goods
+ 			WHERE
+ 				category_id = #{categoryId}
+ 		</select>
+ 		
+ 		
+ 		<select id="getGoodsListByItemType" resultType="cn.tedu.store.bean.Goods">
+ 			SELECT
+ 				id,title
+ 			FROM
+ 				t_goods
+ 			WHERE
+ 				item_type = #{itemType}
+ 			AND status=1 AND num>0
+ 		</select>
+ 		
+ 		
+</mapper> 
+
+
+
+
+
+
+
